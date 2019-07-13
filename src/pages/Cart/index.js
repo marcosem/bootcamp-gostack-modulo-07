@@ -9,8 +9,9 @@ import {
 import * as CartActions from '../../store/modules/cart/actions'; // importing both functions by using *
 
 import { Container, ProductTable, Total } from './styles';
+import { formatPrice } from '../../util/format';
 
-function Cart({ cart, removeFromCart, updateAmount }) {
+function Cart({ cart, total, removeFromCart, updateAmount }) {
   function increment(product) {
     updateAmount(product.id, product.amount + 1);
   }
@@ -58,7 +59,7 @@ function Cart({ cart, removeFromCart, updateAmount }) {
                 </div>
               </td>
               <td>
-                <strong>R$258,80</strong>
+                <strong>{product.subtotal}</strong>
               </td>
               <td>
                 <button
@@ -76,7 +77,7 @@ function Cart({ cart, removeFromCart, updateAmount }) {
         <button type="button">Finish order</button>
         <Total>
           <span>TOTAL</span>
-          <strong>R$1920,28</strong>
+          <strong>{total}</strong>
         </Total>
       </footer>
     </Container>
@@ -89,7 +90,16 @@ const mapDispatchToProps = dispatch =>
 
 // This function converts states to properties
 const mapStateToProps = state => ({
-  cart: state.cart,
+  cart: state.cart.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.price * product.amount),
+  })),
+  // Reduce is used when you want to take a single array and reduce to single value
+  total: formatPrice(
+    state.cart.reduce((total, product) => {
+      return total + product.price * product.amount;
+    }, 0)
+  ),
 });
 
 export default connect(

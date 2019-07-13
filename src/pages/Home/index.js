@@ -31,18 +31,21 @@ class Home extends Component {
   // Every component connected to redux receives a property called "this.props.dispatch"
   // it basically works to do actions to redux
 
-  handleAddProduct = product => {
+  handleAddProduct = id => {
     // changed this after mapDispatchToProps being added to the end of this module
     // const { dispatch } = this.props;
-    const { addToCart } = this.props;
+    const { addToCartRequest } = this.props;
 
     // changed this after mapDispatchToProps being added to the end of this module
     // dispatch(CartActions.addToCard(product));
-    addToCart(product);
+    // Changed to support Saga
+    // addToCart(product);
+    addToCartRequest(id);
   };
 
   render() {
     const { products } = this.state;
+    const { amount } = this.props;
 
     return (
       <ProductList>
@@ -52,9 +55,10 @@ class Home extends Component {
             <strong>{product.title}</strong>
             <span>{product.priceFormatted}</span>
 
-            <AddToCartButton onClick={() => this.handleAddProduct(product)}>
+            <AddToCartButton onClick={() => this.handleAddProduct(product.id)}>
               <div>
-                <MdAddShoppingCart size={16} color="#fff" /> 3
+                <MdAddShoppingCart size={16} color="#fff" />
+                {amount[product.id] || 0}
               </div>
               <span>ADD TO CART</span>
             </AddToCartButton>
@@ -69,8 +73,16 @@ class Home extends Component {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(CartActions, dispatch);
 
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+
+    return amount;
+  }, {}),
+});
+
 // first argument is mapStateToProps, the second is mapDispatchToProps
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Home);

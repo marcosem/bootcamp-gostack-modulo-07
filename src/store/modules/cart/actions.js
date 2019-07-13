@@ -1,6 +1,16 @@
-export function addToCart(product) {
+// changed to support saga
+// export function addToCart(product) {
+export function addToCartRequest(id) {
+  // Saga will intercept this action and them manipulate the data and call addToCartSucess
   return {
-    type: '@cart/ADD',
+    type: '@cart/ADD_REQUEST',
+    id,
+  };
+}
+
+export function addToCartSucess(product) {
+  return {
+    type: '@cart/ADD_SUCESS',
     product,
   };
 }

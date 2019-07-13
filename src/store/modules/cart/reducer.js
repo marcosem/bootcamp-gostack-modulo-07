@@ -4,7 +4,8 @@ import { produce } from 'immer'; // aid to manage states
 // the default value was defined as an empty array "state = []"
 export default function cart(state = [], action) {
   switch (action.type) {
-    case '@cart/ADD':
+    // case '@cart/ADD':
+    case '@cart/ADD_SUCESS':
       return produce(state, draft => {
         // verify if the products already exist
         const productIndex = draft.findIndex(p => p.id === action.product.id);
