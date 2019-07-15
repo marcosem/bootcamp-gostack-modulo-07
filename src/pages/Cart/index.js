@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -12,6 +13,8 @@ import { Container, ProductTable, Total } from './styles';
 import { formatPrice } from '../../util/format';
 
 function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+  console.tron.log(cart);
+
   function increment(product) {
     updateAmountRequest(product.id, product.amount + 1);
   }
@@ -83,6 +86,39 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
     </Container>
   );
 }
+
+// Proptypes
+/*
+"id": 1,
+"title": "Tênis de Caminhada Leve Confortável",
+"price": 179.9,
+"image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg",
+"amount": 1,
+"priceFormatted": "R$ 179,90",
+"subtotal": "R$ 179,90"
+*/
+// function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+Cart.propTypes = {
+  cart: PropTypes.arrayOf({
+    product: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      image: PropTypes.string.isRequired,
+      amount: PropTypes.number.isRequired,
+      priceFormatted: PropTypes.string,
+      subtotal: PropTypes.string,
+    }),
+  }).isRequired,
+  total: PropTypes.string.isRequired,
+  removeFromCart: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+  }).isRequired,
+  updateAmountRequest: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    amount: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 // Convert Redux actions to properties
 const mapDispatchToProps = dispatch =>

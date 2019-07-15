@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux'; // connect this component to redux state
 import { bindActionCreators } from 'redux';
 import { MdAddShoppingCart } from 'react-icons/md';
@@ -11,6 +12,13 @@ import { ProductList, AddToCartButton } from './styles';
 // move export defult to ouside fo class to be able to use connect from redux
 // export default class Home extends Component {
 class Home extends Component {
+  static propTypes = {
+    addToCartRequest: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+    }).isRequired,
+    amount: PropTypes.number.isRequired,
+  };
+
   state = {
     products: [],
   };
@@ -71,6 +79,18 @@ class Home extends Component {
     );
   }
 }
+
+// Proptypes
+/*
+"id": 1,
+"title": "Tênis de Caminhada Leve Confortável",
+"price": 179.9,
+"image": "https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg",
+"amount": 1,
+"priceFormatted": "R$ 179,90",
+"subtotal": "R$ 179,90"
+*/
+// function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
 
 // Convert Redux actions to properties
 const mapDispatchToProps = dispatch =>
