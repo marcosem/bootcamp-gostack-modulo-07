@@ -41,6 +41,9 @@ class Home extends Component {
     // Changed to support Saga
     // addToCart(product);
     addToCartRequest(id);
+
+    // how to navigate using react router dom:
+    // this.props.history.push('/cart');
   };
 
   render() {

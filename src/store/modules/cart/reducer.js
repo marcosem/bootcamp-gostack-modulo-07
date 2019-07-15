@@ -5,8 +5,13 @@ import { produce } from 'immer'; // aid to manage states
 export default function cart(state = [], action) {
   switch (action.type) {
     // case '@cart/ADD':
-    case '@cart/ADD_SUCESS':
+    case '@cart/ADD_SUCCESS':
       return produce(state, draft => {
+        const { product } = action;
+
+        draft.push(product);
+
+        /* Moved this block to Saga
         // verify if the products already exist
         const productIndex = draft.findIndex(p => p.id === action.product.id);
 
@@ -19,6 +24,7 @@ export default function cart(state = [], action) {
             amount: 1,
           });
         }
+        */
       });
     case '@cart/REMOVE':
       return produce(state, draft => {
@@ -29,11 +35,12 @@ export default function cart(state = [], action) {
           draft.splice(productIndex, 1);
         }
       });
-    case '@cart/UPDATE_AMOUNT': {
+    case '@cart/UPDATE_AMOUNT_SUCCESS': {
+      /* Moved to Saga
       if (action.amount <= 0) {
         return state;
       }
-
+      */
       return produce(state, draft => {
         // verify if the products already exist
         const productIndex = draft.findIndex(p => p.id === action.id);
