@@ -1,7 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+// import PropTypes from 'prop-types';
+// import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+// import { bindActionCreators } from 'redux';
 import {
   MdRemoveCircleOutline,
   MdAddCircleOutline,
@@ -12,11 +13,26 @@ import * as CartActions from '../../store/modules/cart/actions'; // importing bo
 import { Container, ProductTable, Total } from './styles';
 import { formatPrice } from '../../util/format';
 
-function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
-  console.tron.log(cart);
+export default function Cart() {
+  const total = useSelector(state =>
+    formatPrice(
+      state.cart.reduce((totalAux, product) => {
+        return totalAux + product.price * product.amount;
+      }, 0)
+    )
+  );
+
+  const cart = useSelector(state =>
+    state.cart.map(product => ({
+      ...product,
+      subtotal: formatPrice(product.price * product.amount),
+    }))
+  );
+
+  const dispatch = useDispatch();
 
   function increment(product) {
-    updateAmountRequest(product.id, product.amount + 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount + 1));
   }
 
   function decrement(product) {
@@ -24,7 +40,7 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
     // if (product.amount === 1) {
     // removeFromCart(product.id);
     // } else {
-    updateAmountRequest(product.id, product.amount - 1);
+    dispatch(CartActions.updateAmountRequest(product.id, product.amount - 1));
     // }
   }
 
@@ -67,7 +83,9 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
               <td>
                 <button
                   type="button"
-                  onClick={() => removeFromCart(product.id)}
+                  onClick={() =>
+                    dispatch(CartActions.removeFromCart(product.id))
+                  }
                 >
                   <MdDelete size={20} color="#7159c1" />
                 </button>
@@ -98,6 +116,7 @@ function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
 "subtotal": "R$ 179,90"
 */
 // function Cart({ cart, total, removeFromCart, updateAmountRequest }) {
+/*
 Cart.propTypes = {
   cart: PropTypes.arrayOf({
     product: PropTypes.shape({
@@ -142,3 +161,4 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Cart);
+*/

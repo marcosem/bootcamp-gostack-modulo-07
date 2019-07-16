@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux'; // connect this component to redux state
-import { bindActionCreators } from 'redux';
+// import { connect } from 'react-redux'; // connect this component to redux state
+import { useDispatch, useSelector } from 'react-redux';
+// import { bindActionCreators } from 'redux';
 import { MdAddShoppingCart } from 'react-icons/md';
 import { formatPrice } from '../../util/format';
 import api from '../../services/api';
@@ -11,8 +12,17 @@ import { ProductList, AddToCartButton } from './styles';
 
 // move export defult to ouside fo class to be able to use connect from redux
 // export default class Home extends Component {
-function Home({ amount, addToCartRequest }) {
+export default function Home() {
   const [products, setProducts] = useState([]); // Replace the state, need to be done for each element in the state
+  const amount = useSelector(state =>
+    state.cart.reduce((amountAux, product) => {
+      amountAux[product.id] = product.amount;
+
+      return amountAux;
+    }, {})
+  );
+
+  const dispatch = useDispatch();
 
   // Replace the componentDidMount
   useEffect(() => {
@@ -44,7 +54,7 @@ function Home({ amount, addToCartRequest }) {
   // handleAddProduct = id => {
   function handleAddProduct(id) {
     // const { addToCartRequest } = this.props; -> Removed after added the hooks
-    addToCartRequest(id);
+    dispatch(CartActions.addToCartRequest(id));
   }
 
   // render() {
@@ -75,13 +85,14 @@ Home.propTypes = {
   addToCartRequest: PropTypes.shape({
     id: PropTypes.number.isRequired,
   }).isRequired,
-  amount: PropTypes.number.isRequired,
 };
 
 // Convert Redux actions to properties
+/*
 const mapDispatchToProps = dispatch =>
   bindActionCreators(CartActions, dispatch);
-
+*/
+/*
 const mapStateToProps = state => ({
   amount: state.cart.reduce((amount, product) => {
     amount[product.id] = product.amount;
@@ -89,9 +100,12 @@ const mapStateToProps = state => ({
     return amount;
   }, {}),
 });
+*/
 
 // first argument is mapStateToProps, the second is mapDispatchToProps
+/*
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(Home);
+*/
